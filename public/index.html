@@ -12,7 +12,8 @@
     <body>
         <main class="container" ng-controller="TasksController as tc">
             <h1>Welcome to your Task Manager</h1>
-            <div class="col-md-12">
+
+            <div class="col-md-12" ng-if="tc.tasks[0]">
                 <h3>Current Tasks</h3>
                 <table class="table table-responsive" >
                     <tr>
@@ -27,40 +28,69 @@
                         <td>{{ task.priority.level }}</td>
                         <td>{{ task.category.name }}</td>
                         <td>
-                            <button class="btn btn-success btn-xs" ng-click=""><span class="glyphicon glyphicon-ok"></span></button>
+                            <button class="btn btn-success btn-xs" ng-click="tc.completeTask(task.id)"><span class="glyphicon glyphicon-ok"></span></button>
                             <button class="btn btn-default btn-xs" ng-click="tc.editTask(task.id)"><span class="glyphicon glyphicon-pencil"></span></button>
                             <button class="btn btn-danger btn-xs" ng-click="tc.deleteTask(task.id)"><span class="glyphicon glyphicon-remove"></span></button>
                         </td>
                     </tr>
                 </table>
             </div>
-            <div>
-                <form name="addForm" id="target" ng-submit="tc.addTask(addForm)" novalidate>
-                    <div class="form-group" ng-class="{'has-error': addForm.title.$invalid && addForm.title.$touched, 'has-success': addForm.title.$valid && addForm.title.$touched }">
-                        <label for="title">Task Title:</label>
-                        <input type="text" name="title" id="title" ng-model="tc.newTask.title" class="form-control" required autofocus>
+
+            <button class="btn btn-primary" ng-click="tc.showForm()">Add A New Task</button>
+            
+            <div id="showToggle">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form name="addForm" id="target" ng-submit="tc.addTask(addForm)" novalidate>
+                            <div class="form-group" ng-class="{'has-error': addForm.title.$invalid && addForm.title.$touched, 'has-success': addForm.title.$valid && addForm.title.$touched }">
+                                <label for="title">Task Title:</label>
+                                <input type="text" name="title" id="title" ng-model="tc.newTask.title" class="form-control" required autofocus>
+                            </div>
+                            <div class="form-group" ng-class="{'has-error': addForm.details.$invalid && addForm.details.$touched, 'has-success': addForm.details.$valid && addForm.details.$touched }">
+                                <label for="details">Task Details:</label>
+                                <textarea name="details" id="details" class="form-control" rows="8" ng-model="tc.newTask.details" required></textarea>
+                            </div>
+                            <div class="form-group" ng-class="{'has-error': addForm.priority.$invalid && addForm.priority.$touched, 'has-success': addForm.priority.$valid && addForm.priority.$touched }">
+                                <label for="priority">Task Priority Level:</label>
+                               <select type="priority" name="priority" id="priority" class="form-control" ng-model="tc.newTask.priority" ng-options="obj.level for obj in tc.priority" required>
+                                    <option class="disabled" value="">Choose a priority level</option>
+                                </select>
+                            </div>
+                            <div class="form-group" ng-class="{'has-error': addForm.category.$invalid && addForm.category.$touched, 'has-success': addForm.category.$valid && addForm.category.$touched }">
+                                <label for="category">Category:</label>
+                                <select id="category" class="form-control" ng-model="tc.newTask.category" ng-options="obj.name for obj in tc.newTaskCategory" required>>
+                                    <option class="disabled" value="">Choose a category</option>
+                                </select>
+                            </div>
+                            <button type="submit" ng-disabled="addForm.$invalid" class="btn btn-success pull-right">Add Task</button>
+                        </form>
                     </div>
-                    <div class="form-group" ng-class="{'has-error': addForm.details.$invalid && addForm.details.$touched, 'has-success': addForm.details.$valid && addForm.details.$touched }">
-                        <label for="details">Task Details:</label>
-                        <textarea name="details" id="details" class="form-control" rows="8" ng-model="tc.newTask.details" required></textarea>
-                    </div>
-                    <div class="form-group" ng-class="{'has-error': addForm.priority.$invalid && addForm.priority.$touched, 'has-success': addForm.priority.$valid && addForm.priority.$touched }">
-                        <label for="priority">Task Priority Level:</label>
-                       <select type="priority" name="priority" id="priority" class="form-control" ng-model="tc.newTask.priority" ng-options="obj.level for obj in tc.priority" required>
-                            <option class="disabled" value="">Choose a priority level</option>
-                        </select>
-                    </div>
-                    <div class="form-group" ng-class="{'has-error': addForm.category.$invalid && addForm.category.$touched, 'has-success': addForm.category.$valid && addForm.category.$touched }">
-                        <label for="category">Category:</label>
-                        <select id="category" class="form-control" ng-model="tc.newTask.category" ng-options="obj.name for obj in tc.newTaskCategory" required>>
-                            <option class="disabled" value="">Choose a category</option>
-                        </select>
-                    </div>
-                    <button type="submit" ng-disabled="addForm.$invalid" class="btn btn-primary">Add A New Task</button>
-                </form>
+                </div>
+            </div>
+
+            <div class="col-md-12" ng-if="tc.completedTasks[0].complete === true">
+                <h3>Completed Tasks</h3>
+                <table class="table table-responsive" >
+                    <tr>
+                        <th>Task Title</th>
+                        <th>Task Details</th>
+                        <th>Task Priority Level</th>
+                        <th>Task Category</th>
+                    </tr>
+                    <tr ng-repeat="task in tc.completedTasks">
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.details }}</td>
+                        <td>{{ task.priority.level }}</td>
+                        <td>{{ task.category.name }}</td>
+                        <td>
+                            <button class="btn btn-success btn-xs" ng-click="tc.completeTask(task.id)"><span class="glyphicon glyphicon-ok"></span></button>
+                            <button class="btn btn-default btn-xs" ng-click="tc.editTask(task.id)"><span class="glyphicon glyphicon-pencil"></span></button>
+                            <button class="btn btn-danger btn-xs" ng-click="tc.deleteTask(task.id)"><span class="glyphicon glyphicon-remove"></span></button>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <form role="form" id="target" ng-submit="tc.saveEditedTask()" novalidate>
-
                 <div class="modal fade" id="myModal">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -94,7 +124,6 @@
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
-
             </form>
         </main>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>

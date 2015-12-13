@@ -5,10 +5,18 @@
 
     app.controller('TasksController', function() {
 
-        this.saved = localStorage.getItem('tasks');
+        $('#showToggle').hide();
+
+        this.savedTasks = localStorage.getItem('tasks');
+        
+        this.taskItem = (localStorage.getItem('tasks') !== null) ? JSON.parse(this.savedTasks) : null;
+
+        this.savedCompletedTasks = localStorage.getItem('completed');
         
         this.tasks = [];
         
+        this.completedTasks = [];
+
         this.newTask = {};
 
         localStorage.setItem('tasks', JSON.stringify(this.tasks));
@@ -47,7 +55,7 @@
             this.tasks.push(this.newTask);
 
             this.newTask = {};
-            
+
             localStorage.setItem('tasks', JSON.stringify(this.tasks));
             
             addForm.$setPristine();
@@ -86,6 +94,24 @@
             }
         };
 
+        this.completeTask = function(id) {
+            if ( ! this.tasks[id].complete) {
+                this.tasks[id].complete = true;
+            }
 
+            this.completedTasks.push(this.tasks[id]);
+
+            this.tasks.splice(id, 1);
+        };
+
+        this.showForm = function() {
+            if (! $('#showToggle').hasClass('disable')) {
+                $('#showToggle').show();
+                $('#showToggle').addClass('disable');
+            } else {
+                $('#showToggle').hide();
+                $('#showToggle').removeClass('disable');
+            }
+        }
     });
 })();
