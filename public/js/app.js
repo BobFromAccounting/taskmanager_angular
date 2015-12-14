@@ -5,19 +5,13 @@
 
     app.controller('TasksController', function() {
 
-        this.savedTasks = localStorage.getItem('tasks');
+        this.tasks = (localStorage.getItem('tasks') !== null) ? JSON.parse(localStorage.getItem('tasks')) : [];
         
-        this.taskItem = (localStorage.getItem('tasks') !== null) ? JSON.parse(this.savedTasks) : null;
+        this.completedTasks = (localStorage.getItem('completed') !== null) ? JSON.parse(localStorage.getItem('completed')) : [];
 
-        this.savedCompletedTasks = localStorage.getItem('completed');
-        
-        this.tasks = [];
-        
-        this.completedTasks = [];
-
+        console.log(this.tasks);
+        console.log(this.completedTasks);
         this.newTask = {};
-
-        localStorage.setItem('tasks', JSON.stringify(this.tasks));
 
         this.priority = [
             {level: 'Low'},
@@ -26,10 +20,9 @@
         ];
 
         this.categories = [
+            {name: 'Educational'},
             {name: 'Personal'},
             {name: 'Work'},
-            {name: 'School'},
-            {name: 'Cleaning'},
             {name: 'Other'}
         ];
 
@@ -37,7 +30,7 @@
 
         this.today = new Date();
 
-        this.addTask = function (addForm) {
+        this.addTask = function(addForm) {
 
             this.newTask = {
                 id: this.tasks.length,
@@ -74,7 +67,7 @@
                 date_modified: this.today,
                 category: this.tasks[id].category.name,
                 complete: this.tasks[id].complete
-            }
+            };
 
             this.closeViewTaskDetails();
 
@@ -98,6 +91,7 @@
                this.tasks.splice(id, 1);
             }
 
+            localStorage.setItem('tasks', JSON.stringify(this.tasks));
             this.closeViewTaskDetails();
         };
 
@@ -108,7 +102,11 @@
 
             this.completedTasks.push(this.tasks[id]);
 
+            localStorage.setItem('completed', JSON.stringify(this.completedTasks));
+
             this.tasks.splice(id, 1);
+
+            localStorage.setItem('tasks', JSON.stringify(this.tasks));
 
             this.closeViewTaskDetails();
         };
@@ -120,18 +118,24 @@
 
             this.tasks.push(this.completedTasks[id]);
 
+            localStorage.setItem('tasks', JSON.stringify(this.tasks));
+
             this.completedTasks.splice(id, 1);
 
+            localStorage.setItem('completed', JSON.stringify(this.completedTasks));
+
             this.closeViewTaskDetails();
-        }
+        };
 
         this.deleteCompletedTask = function(id) {
             if (confirm('Are you sure you want to remove this task?')) {
                this.completedTasks.splice(id, 1);
             }
 
+            localStorage.setItem('completed', JSON.stringify(this.completedTasks));
+
             this.closeViewTaskDetails();
-        }
+        };
 
         this.showForm = function() {
             $('#showToggle').show();
