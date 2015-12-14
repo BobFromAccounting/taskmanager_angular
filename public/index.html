@@ -22,7 +22,7 @@
                         <th>Task Priority Level</th>
                         <th>Task Category</th>
                     </tr>
-                    <tr ng-repeat="task in tc.tasks">
+                    <tr ng-repeat="task in tc.tasks" ng-dblclick="tc.viewTaskDetails(task.id)">
                         <td>{{ task.title }}</td>
                         <td>{{ task.details }}</td>
                         <td>{{ task.priority.level }}</td>
@@ -64,6 +64,7 @@
                             </div>
                             <button type="submit" ng-disabled="addForm.$invalid" class="btn btn-success pull-right">Add Task</button>
                         </form>
+                        <button ng-click="tc.hideForm($event)" class="btn btn-warning pull-left">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -77,7 +78,7 @@
                         <th>Task Priority Level</th>
                         <th>Task Category</th>
                     </tr>
-                    <tr ng-repeat="task in tc.completedTasks">
+                    <tr ng-repeat="task in tc.completedTasks" ng-dblclick="tc.viewCompletedTaskDetails(task.id)">
                         <td>{{ task.title }}</td>
                         <td>{{ task.details }}</td>
                         <td>{{ task.priority.level }}</td>
@@ -90,8 +91,45 @@
                     </tr>
                 </table>
             </div>
+
+            <!-- View Task Details Modal -->
+            <div class="modal fade" id="viewModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">View Task Details</h4>
+                        </div>
+                        <div class="modal-body">
+                            <button class="btn btn-danger btn-xs pull-right" ng-click="tc.deleteTask(tc.taskToView.id)"><span class="glyphicon glyphicon-remove"></span></button>
+                            <div ng-if="tc.taskToView.complete === false">
+                                <button class="btn btn-default btn-xs pull-right" ng-click="tc.editTask(tc.taskToView.id)"><span class="glyphicon glyphicon-pencil"></span></button>
+                                <button class="btn btn-success btn-xs pull-right" ng-click="tc.completeTask(tc.taskToView.id)"><span class="glyphicon glyphicon-ok"></span></button>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h4 align="center">Task title: {{ tc.taskToView.title }}</h4>
+                                    <p><strong>Task Details: </strong></p>
+                                    <p>{{ tc.taskToView.details }}</p>
+                                    <p><strong>Task Priority: </strong></p>
+                                    <p>{{ tc.taskToView.priority }}</p>
+                                    <p><strong>Task Category: </strong></p>
+                                    <p>{{ tc.taskToView.category }}</p>
+                                    <p><strong>Task Completed: </strong></p>
+                                    <p>{{ tc.taskToView.complete }}</p>
+                                    <p><strong>Task Created On: </strong>{{ tc.taskToView.date_created | date: 'longDate' }}</p>
+                                    <p><strong>Task Last Modified On: </strong>{{ tc.taskToView.date_modified | date: 'longDate' }}</p>
+                                </div>
+                                <button class="btn btn-primary" ng-click="tc.closeViewTaskDetails()">Back to Tasks</button>
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+            <!-- Edit Task Modal -->
             <form role="form" id="target" ng-submit="tc.saveEditedTask()" novalidate>
-                <div class="modal fade" id="myModal">
+                <div class="modal fade" id="editModal">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">

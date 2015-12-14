@@ -5,8 +5,6 @@
 
     app.controller('TasksController', function() {
 
-        $('#showToggle').hide();
-
         this.savedTasks = localStorage.getItem('tasks');
         
         this.taskItem = (localStorage.getItem('tasks') !== null) ? JSON.parse(this.savedTasks) : null;
@@ -60,6 +58,8 @@
             
             addForm.$setPristine();
             addForm.$setUntouched();
+
+            $('#showToggle').hide();
         };
 
 
@@ -73,10 +73,13 @@
                 date_created: this.tasks[id].date_created,
                 date_modified: this.today,
                 category: this.tasks[id].category.name,
-                complete: false
+                complete: this.tasks[id].complete
             }
 
-            $('#myModal').modal('show');
+            this.closeViewTaskDetails();
+
+            $('#editModal').modal('show');
+
         };
 
         this.saveEditedTask = function() {
@@ -85,13 +88,17 @@
 
             localStorage.setItem('tasks', JSON.stringify(this.tasks));
             
-            $('#myModal').modal('hide');
+            $('#editModal').modal('hide');
+
+            this.viewTaskDetails(this.taskToEdit.id);
         };
 
         this.deleteTask = function(id) {
             if (confirm('Are you sure you want to remove this task?')) {
                this.tasks.splice(id, 1);
             }
+
+            this.closeViewTaskDetails();
         };
 
         this.completeTask = function(id) {
@@ -102,16 +109,51 @@
             this.completedTasks.push(this.tasks[id]);
 
             this.tasks.splice(id, 1);
+
+            this.closeViewTaskDetails();
         };
 
         this.showForm = function() {
-            if (! $('#showToggle').hasClass('disable')) {
-                $('#showToggle').show();
-                $('#showToggle').addClass('disable');
-            } else {
-                $('#showToggle').hide();
-                $('#showToggle').removeClass('disable');
-            }
+            $('#showToggle').show();
+        };
+
+        this.hideForm = function($event) {
+            $event.preventDefault();
+            $('#showToggle').hide();
+        };
+
+        this.viewTaskDetails = function(id) {
+            this.taskToView = {
+                id: this.tasks[id].id,
+                title: this.tasks[id].title,
+                details: this.tasks[id].details,
+                priority: this.tasks[id].priority.level,
+                date_created: this.tasks[id].date_created,
+                date_modified: this.tasks[id].date_modified,
+                category: this.tasks[id].category.name,
+                complete: this.tasks[id].complete
+            };
+
+            $('#viewModal').modal('show');
+        };
+
+        this.viewCompletedTaskDetails = function(id) {
+            this.taskToView = {
+                id: this.completedTasks[id].id,
+                title: this.completedTasks[id].title,
+                details: this.completedTasks[id].details,
+                priority: this.completedTasks[id].priority.level,
+                date_created: this.completedTasks[id].date_created,
+                date_modified: this.completedTasks[id].date_modified,
+                category: this.completedTasks[id].category.name,
+                complete: this.completedTasks[id].complete
+            };
+
+            $('#viewModal').modal('show');
         }
+
+        this.closeViewTaskDetails = function() {
+            $('#viewModal').modal('hide');
+        };
     });
 })();
