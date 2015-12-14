@@ -113,6 +113,26 @@
             this.closeViewTaskDetails();
         };
 
+        this.uncompleteTask = function(id) {
+            if (this.completedTasks[id].complete) {
+                this.completedTasks[id].complete = false;
+            }
+
+            this.tasks.push(this.completedTasks[id]);
+
+            this.completedTasks.splice(id, 1);
+
+            this.closeViewTaskDetails();
+        }
+
+        this.deleteCompletedTask = function(id) {
+            if (confirm('Are you sure you want to remove this task?')) {
+               this.completedTasks.splice(id, 1);
+            }
+
+            this.closeViewTaskDetails();
+        }
+
         this.showForm = function() {
             $('#showToggle').show();
         };
