@@ -9,8 +9,6 @@
         
         this.completedTasks = (localStorage.getItem('completed') !== null) ? JSON.parse(localStorage.getItem('completed')) : [];
 
-        console.log(this.tasks);
-        console.log(this.completedTasks);
         this.newTask = {};
 
         this.priority = [
@@ -180,4 +178,4 @@
             $('#viewModal').modal('hide');
         };
     });
-})();
+}());
