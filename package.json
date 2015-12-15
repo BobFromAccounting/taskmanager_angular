@@ -1,0 +1,23 @@
+{
+  "name": "taskmanager_angular",
+  "version": "1.0.0",
+  "description": "## Introduction",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/http-server/bin/http-server ./public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SyntaxStacks/taskmanager_angular.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SyntaxStacks/taskmanager_angular/issues"
+  },
+  "homepage": "https://github.com/SyntaxStacks/taskmanager_angular#readme",
+  "devDependencies": {
+    "http-server": "^0.8.5"
+  }
+}
