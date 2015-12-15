@@ -1,5 +1,13 @@
 # Task Management App Using Angular.JS
 
+## Install
+Run the following commands to serve the app:
+
+```
+npm install
+npm start
+```
+
 ## Introduction
 
 Upon initially coming to the page, the user will be prompted to add a task to their list. Using the simple form provided, a user will provide a title for the task to be added and set a priority level for the task. This level ranges from low to high. They will also be able to set a category for the task (ie. Personal, Work, Educational, etc.) as well as add a broader description to their individual tasks. The user can then save the task into the Current Tasks table, which will persist through page loads, thanks to local storage in the BOM.
